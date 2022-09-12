@@ -22,11 +22,17 @@ camera.position.set(5,5,30)
 
 new OrbitControls(camera, renderer.domElement)
 
+const options = {
+  speed: 0.001,
+  wireframe: false,
+  height: 5
+}
+
 let planeGeometry = new THREE.PlaneBufferGeometry(200,200,150,150)
 let planeMesh = new THREE.MeshLambertMaterial({ 
   color: 0xffffff, 
   side: THREE.DoubleSide,
-  wireframe: true
+  wireframe: options.wireframe
 })
 let plane = new THREE.Mesh(planeGeometry, planeMesh);
 plane.rotation.x = -Math.PI / 2
@@ -43,15 +49,12 @@ let planeSH = 150
 
 const noise2D = createNoise2D()
 
-const options = {
-  speed: 0.001,
-  wireframe: false,
-  height: 5
-}
-
 const gui = new dat.GUI()
 gui.add(options, 'speed', 0.001, 0.01)
 gui.add(options, 'height', 1, 10)
+gui.add(options, "wireframe").onChange((e)=>{
+  plane.material.wireframe = e
+})
 
 function updatePlane(step) {
   let pos = planeGeometry.attributes.position.array
