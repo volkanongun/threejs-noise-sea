@@ -41,11 +41,21 @@ let planeH = 200
 let planeSW = 150
 let planeSH = 150
 
-const noise2D = createNoise2D();
+const noise2D = createNoise2D()
+
+const options = {
+  speed: 0.001,
+  wireframe: false,
+  height: 5
+}
+
+const gui = new dat.GUI()
+gui.add(options, 'speed', 0.001, 0.01)
+gui.add(options, 'height', 1, 10)
 
 function updatePlane(step) {
   let pos = planeGeometry.attributes.position.array
-  offsetX += 0.001
+  offsetX += options.speed
   offsetY = 0
 
   for(let i = 0; i < pos.length; i+=3) {
@@ -64,7 +74,7 @@ function updatePlane(step) {
     tx += row * 0.025
     ty += col * 0.025
 
-    pos[i+2] = noise2D(tx, ty) * 5
+    pos[i+2] = noise2D(tx, ty) * options.height
   }
 
   planeGeometry.attributes.position.needsUpdate = true
@@ -129,28 +139,7 @@ function updateLights() {
   light4.position.z = Math.cos(time * 0.8) * d
 }
 
-const options = {
-  sphereColor : '#ffea00',
-  wireframe: false,
-  speed: 0.01,
-  angle: .2,
-  penumbra: 0,
-  intensity: 1
-}
-
-const gui = new dat.GUI()
-
-gui.add(options, 'speed', 0, 0.1)
-
-gui.add(options, 'angle', 0, 1)
-gui.add(options, 'penumbra', 0, 1)
-gui.add(options, 'intensity', 0, 1)
-
-const rayCaster = new THREE.Raycaster()
-
-let clock = new THREE.Clock();
-
-function animate(time){
+function animate(){
 
   updatePlane()
   updateLights()
